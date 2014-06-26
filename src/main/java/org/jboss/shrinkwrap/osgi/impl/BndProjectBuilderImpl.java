@@ -17,7 +17,7 @@ package org.jboss.shrinkwrap.osgi.impl;
 import aQute.bnd.build.Project;
 import aQute.bnd.build.ProjectBuilder;
 import aQute.bnd.build.Workspace;
-import aQute.lib.osgi.Jar;
+import aQute.bnd.osgi.Jar;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -58,11 +58,11 @@ public class BndProjectBuilderImpl implements BndProjectBuilder {
 
 			projectBuilder.setBase(baseFile);
 
-			Jar build = projectBuilder.build();
+			Jar jar = projectBuilder.build();
 
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-			build.write(baos);
+			jar.write(baos);
 
 			return ShrinkWrap.create(ZipImporter.class).importFrom(new ByteArrayInputStream(baos.toByteArray())).as(typeClass);
 		} catch (Exception e) {
