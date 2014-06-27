@@ -30,4 +30,6 @@ public interface BndProjectBuilder extends Assignable {
 	BndProjectBuilder setBase(File file);
 
 	BndProjectBuilder setBndFile(File file);
+
+	BndProjectBuilder generateManifest(boolean enableAnalyze);
 }

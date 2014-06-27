@@ -35,6 +35,8 @@ import java.io.File;
  */
 public class BndProjectBuilderImpl implements BndProjectBuilder {
 
+	private boolean generateManifest = true;
+
 	private File workspaceFile = null;
 	private File projectFile = null;
 	private File baseFile = null;
@@ -58,9 +60,13 @@ public class BndProjectBuilderImpl implements BndProjectBuilder {
 
 			projectBuilder.setBase(baseFile);
 
-			Jar jar = projectBuilder.build();
+			if (!generateManifest) {
+				projectBuilder.setProperty(ProjectBuilder.NOMANIFEST, "true");
+			}
 
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+			Jar jar = projectBuilder.build();
 
 			jar.write(baos);
 
@@ -93,6 +99,13 @@ public class BndProjectBuilderImpl implements BndProjectBuilder {
 			setBase(bndParentDir);
 
 		this.bndFile = bnd;
+
+		return this;
+	}
+
+	@Override
+	public BndProjectBuilder generateManifest(boolean enableAnalyze) {
+		this.generateManifest = enableAnalyze;
 
 		return this;
 	}
