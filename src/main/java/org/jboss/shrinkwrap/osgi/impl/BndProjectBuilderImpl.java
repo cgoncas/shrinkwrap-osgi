@@ -14,9 +14,12 @@
 
 package org.jboss.shrinkwrap.osgi.impl;
 
+import aQute.bnd.build.Container;
 import aQute.bnd.build.Project;
 import aQute.bnd.build.ProjectBuilder;
 import aQute.bnd.build.Workspace;
+import aQute.bnd.header.Attrs;
+import aQute.bnd.osgi.Analyzer;
 import aQute.bnd.osgi.Jar;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Assignable;
@@ -29,6 +32,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.Collection;
 
 /**
  * @author Carlos Sierra Andrés
@@ -70,7 +74,9 @@ public class BndProjectBuilderImpl implements BndProjectBuilder {
 
 			jar.write(baos);
 
-			return ShrinkWrap.create(ZipImporter.class).importFrom(new ByteArrayInputStream(baos.toByteArray())).as(typeClass);
+			return ShrinkWrap.create(ZipImporter.class).
+					importFrom(new ByteArrayInputStream(baos.toByteArray())).
+					as(typeClass);
 		} catch (Exception e) {
 			throw new IllegalStateException(e);
 		}
