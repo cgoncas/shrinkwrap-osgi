@@ -6,7 +6,7 @@
 
 	<groupId>org.jboss.shrinkwrap.osgi</groupId>
 	<artifactId>shrinkwrap-osgi</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-alpha-1-SNAPSHOT</version>
 
 	<dependencies>
 		<dependency>
