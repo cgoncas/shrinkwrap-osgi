@@ -14,12 +14,9 @@
 
 package org.jboss.shrinkwrap.osgi.impl;
 
-import aQute.bnd.build.Container;
 import aQute.bnd.build.Project;
 import aQute.bnd.build.ProjectBuilder;
 import aQute.bnd.build.Workspace;
-import aQute.bnd.header.Attrs;
-import aQute.bnd.osgi.Analyzer;
 import aQute.bnd.osgi.Jar;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Assignable;
@@ -32,7 +29,6 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.util.Collection;
 
 /**
  * @author Carlos Sierra Andrés
