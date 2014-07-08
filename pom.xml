@@ -18,7 +18,7 @@
 	
 	<issueManagement>
         <system>jira</system>
-        <url>http://jira.jboss.com/jira/browse/ARQ</url>
+        <url>https://issues.jboss.org/browse/SHRINKWRAP</url>
     </issueManagement>
 	
 	<licenses>
