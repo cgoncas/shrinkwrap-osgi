@@ -23,6 +23,7 @@ import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.osgi.api.BndArchive;
 import org.jboss.shrinkwrap.osgi.api.BndProjectBuilder;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -48,37 +49,36 @@ public class BndProjectBuilderImpl implements BndProjectBuilder {
 
 	@Override
 	public <TYPE extends Assignable> TYPE as(Class<TYPE> typeClass) {
-		if (!(JavaArchive.class.isAssignableFrom(typeClass))) {
-			throw new NotImplementedException();
-		}
-		try {
-			Workspace workspace = new Workspace(this.workspaceFile);
+        try {
+            return asBndJar().as(typeClass);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
 
-			Project project = new Project(workspace, this.projectFile, bndFile);
+    @Override
+    public BndArchive asBndJar() {
+        try {
+            Workspace workspace = new Workspace(this.workspaceFile);
 
-			ProjectBuilder projectBuilder = new ProjectBuilder(project);
+            Project project = new Project(workspace, this.projectFile, bndFile);
 
-			projectBuilder.setBase(baseFile);
+            ProjectBuilder projectBuilder = new ProjectBuilder(project);
 
-			if (!generateManifest) {
-				projectBuilder.setProperty(ProjectBuilder.NOMANIFEST, "true");
-			}
+            projectBuilder.setBase(baseFile);
 
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            if (!generateManifest) {
+                projectBuilder.setProperty(ProjectBuilder.NOMANIFEST, "true");
+            }
 
-			Jar jar = projectBuilder.build();
+            return new BndArchive(projectBuilder.build());
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
 
-			jar.write(baos);
 
-			return ShrinkWrap.create(ZipImporter.class).
-					importFrom(new ByteArrayInputStream(baos.toByteArray())).
-					as(typeClass);
-		} catch (Exception e) {
-			throw new IllegalStateException(e);
-		}
-	}
-
-	@Override
+    @Override
 	public BndProjectBuilder setBase(File base) {
 		if (workspaceFile == null)
 			setWorkspace(base);

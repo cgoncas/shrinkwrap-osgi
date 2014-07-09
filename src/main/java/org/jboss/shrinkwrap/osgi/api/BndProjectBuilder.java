@@ -15,6 +15,7 @@
 package org.jboss.shrinkwrap.osgi.api;
 
 import org.jboss.shrinkwrap.api.Assignable;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 
 import java.io.File;
 
@@ -32,4 +33,6 @@ public interface BndProjectBuilder extends Assignable {
 	BndProjectBuilder setBndFile(File file);
 
 	BndProjectBuilder generateManifest(boolean enableAnalyze);
+
+    BndArchive asBndJar();
 }
