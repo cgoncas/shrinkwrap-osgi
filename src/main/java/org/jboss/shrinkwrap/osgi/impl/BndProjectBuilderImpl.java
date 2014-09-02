@@ -17,19 +17,17 @@ package org.jboss.shrinkwrap.osgi.impl;
 import aQute.bnd.build.Project;
 import aQute.bnd.build.ProjectBuilder;
 import aQute.bnd.build.Workspace;
-import aQute.bnd.osgi.Jar;
+import aQute.bnd.osgi.Processor;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Assignable;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.importer.ZipImporter;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.osgi.api.BndArchive;
 import org.jboss.shrinkwrap.osgi.api.BndProjectBuilder;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * @author Carlos Sierra Andrés
@@ -42,6 +40,8 @@ public class BndProjectBuilderImpl implements BndProjectBuilder {
 	private File projectFile = null;
 	private File baseFile = null;
 	private File bndFile = null;
+    private List<File> projectPropertiesFiles = new ArrayList<>();
+    private List<File> workspacePropertiesFiles = new ArrayList<>();
 
 	public BndProjectBuilderImpl(Archive<?> archive) {
 
@@ -61,7 +61,15 @@ public class BndProjectBuilderImpl implements BndProjectBuilder {
         try {
             Workspace workspace = new Workspace(this.workspaceFile);
 
-            Project project = new Project(workspace, this.projectFile, bndFile);
+            Properties workspaceProperties = buildProperties(workspace, null, workspacePropertiesFiles.toArray(new File[0]));
+
+            workspace.setProperties(workspaceProperties);
+
+            Project project = new Project(workspace, this.projectFile);
+
+            Properties projectProperties = buildProperties(project, bndFile, projectPropertiesFiles.toArray(new File[0]));
+
+            project.setProperties(projectProperties);
 
             ProjectBuilder projectBuilder = new ProjectBuilder(project);
 
@@ -77,6 +85,19 @@ public class BndProjectBuilderImpl implements BndProjectBuilder {
         }
     }
 
+    protected Properties buildProperties(Processor processor, File propertiesFile, File ... extraFiles) throws IOException {
+        Properties properties = new Properties();
+
+        for (File extraFile : extraFiles) {
+            properties.putAll(processor.loadProperties(extraFile));
+        }
+
+        if (propertiesFile != null) {
+            properties.putAll(processor.loadProperties(propertiesFile));
+        }
+
+        return properties;
+    }
 
     @Override
 	public BndProjectBuilder setBase(File base) {
@@ -122,7 +143,21 @@ public class BndProjectBuilderImpl implements BndProjectBuilder {
 		return this;
 	}
 
-	@Override
+    @Override
+    public BndProjectBuilder addProjectPropertiesFile(File file) {
+        projectPropertiesFiles.add(file);
+
+        return this;
+    }
+
+    @Override
+    public BndProjectBuilder addWorkspacePropertiesFile(File file) {
+        workspacePropertiesFiles.add(file);
+
+        return this;
+    }
+
+    @Override
 	public BndProjectBuilder setWorkspace(File workspace) {
 		this.workspaceFile = workspace;
 
