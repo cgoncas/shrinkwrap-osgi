@@ -15,7 +15,6 @@
 package org.jboss.shrinkwrap.osgi.api;
 
 import org.jboss.shrinkwrap.api.Assignable;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
 
 import java.io.File;
 
