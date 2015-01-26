@@ -14,7 +14,8 @@
 	
 	<groupId>org.jboss.shrinkwrap.osgi</groupId>
 	<artifactId>shrinkwrap-osgi</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0-alpha-1-SNAPSHOT</version>
+	
 	<issueManagement>
         <system>jira</system>
         <url>https://issues.jboss.org/browse/SHRINKWRAP</url>
