@@ -41,8 +41,8 @@ public class BndProjectBuilderImpl implements BndProjectBuilder {
 	private File baseFile = null;
 	private File bndFile = null;
 	private List<File> classPath = new ArrayList<>();
-    private List<File> projectPropertiesFiles = new ArrayList<>();
-    private List<File> workspacePropertiesFiles = new ArrayList<>();
+	private List<File> projectPropertiesFiles = new ArrayList<>();
+	private List<File> workspacePropertiesFiles = new ArrayList<>();
 
 	public BndProjectBuilderImpl(Archive<?> archive) {
 
@@ -57,61 +57,61 @@ public class BndProjectBuilderImpl implements BndProjectBuilder {
 
 	@Override
 	public <TYPE extends Assignable> TYPE as(Class<TYPE> typeClass) {
-        try {
-            return asBndJar().as(typeClass);
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
-    }
+		try {
+			return asBndJar().as(typeClass);
+		} catch (Exception e) {
+			throw new IllegalStateException(e);
+		}
+	}
 
-    @Override
-    public BndArchive asBndJar() {
-        try {
-            Workspace workspace = new Workspace(this.workspaceFile);
+	@Override
+	public BndArchive asBndJar() {
+		try {
+			Workspace workspace = new Workspace(this.workspaceFile);
 
-            Properties workspaceProperties = buildProperties(workspace, null, workspacePropertiesFiles.toArray(new File[0]));
+			Properties workspaceProperties = buildProperties(workspace, null, workspacePropertiesFiles.toArray(new File[0]));
 
-            workspace.setProperties(workspaceProperties);
+			workspace.setProperties(workspaceProperties);
 
-            Project project = new Project(workspace, this.projectFile);
+			Project project = new Project(workspace, this.projectFile);
 
-            Properties projectProperties = buildProperties(project, bndFile, projectPropertiesFiles.toArray(new File[0]));
+			Properties projectProperties = buildProperties(project, bndFile, projectPropertiesFiles.toArray(new File[0]));
 
-            project.setProperties(projectProperties);
+			project.setProperties(projectProperties);
 
-            ProjectBuilder projectBuilder = new ProjectBuilder(project);
+			ProjectBuilder projectBuilder = new ProjectBuilder(project);
 
-            projectBuilder.setBase(baseFile);
+			projectBuilder.setBase(baseFile);
 
 			for (File file : classPath) {
 				projectBuilder.addClasspath(file);
 			}
 
-            if (!generateManifest) {
-                projectBuilder.setProperty(ProjectBuilder.NOMANIFEST, "true");
-            }
+			if (!generateManifest) {
+				projectBuilder.setProperty(ProjectBuilder.NOMANIFEST, "true");
+			}
 
-            return new BndArchive(projectBuilder.build());
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
-    }
+			return new BndArchive(projectBuilder.build());
+		} catch (Exception e) {
+			throw new IllegalStateException(e);
+		}
+	}
 
-    protected Properties buildProperties(Processor processor, File propertiesFile, File ... extraFiles) throws IOException {
-        Properties properties = new Properties();
+	protected Properties buildProperties(Processor processor, File propertiesFile, File ... extraFiles) throws IOException {
+		Properties properties = new Properties();
 
-        for (File extraFile : extraFiles) {
-            properties.putAll(processor.loadProperties(extraFile));
-        }
+		for (File extraFile : extraFiles) {
+			properties.putAll(processor.loadProperties(extraFile));
+		}
 
-        if (propertiesFile != null) {
-            properties.putAll(processor.loadProperties(propertiesFile));
-        }
+		if (propertiesFile != null) {
+			properties.putAll(processor.loadProperties(propertiesFile));
+		}
 
-        return properties;
-    }
+		return properties;
+	}
 
-    @Override
+	@Override
 	public BndProjectBuilder setBase(File base) {
 		if (workspaceFile == null)
 			setWorkspace(base);
@@ -155,24 +155,25 @@ public class BndProjectBuilderImpl implements BndProjectBuilder {
 		return this;
 	}
 
-    @Override
-    public BndProjectBuilder addProjectPropertiesFile(File file) {
-        projectPropertiesFiles.add(file);
+	@Override
+	public BndProjectBuilder addProjectPropertiesFile(File file) {
+		projectPropertiesFiles.add(file);
 
-        return this;
-    }
+		return this;
+	}
 
-    @Override
-    public BndProjectBuilder addWorkspacePropertiesFile(File file) {
-        workspacePropertiesFiles.add(file);
+	@Override
+	public BndProjectBuilder addWorkspacePropertiesFile(File file) {
+		workspacePropertiesFiles.add(file);
 
-        return this;
-    }
+		return this;
+	}
 
-    @Override
+	@Override
 	public BndProjectBuilder setWorkspace(File workspace) {
 		this.workspaceFile = workspace;
 
 		return this;
 	}
+
 }
