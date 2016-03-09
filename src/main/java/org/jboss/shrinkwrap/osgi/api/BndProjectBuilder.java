@@ -23,6 +23,8 @@ import java.io.File;
  */
 public interface BndProjectBuilder extends Assignable {
 
+	BndProjectBuilder addClassPath(File file);
+
 	BndProjectBuilder addProjectPropertiesFile(File file);
 
 	BndProjectBuilder addWorkspacePropertiesFile(File file);

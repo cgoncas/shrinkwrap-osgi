@@ -40,11 +40,19 @@ public class BndProjectBuilderImpl implements BndProjectBuilder {
 	private File projectFile = null;
 	private File baseFile = null;
 	private File bndFile = null;
+	private List<File> classPath = new ArrayList<>();
     private List<File> projectPropertiesFiles = new ArrayList<>();
     private List<File> workspacePropertiesFiles = new ArrayList<>();
 
 	public BndProjectBuilderImpl(Archive<?> archive) {
 
+	}
+
+	@Override
+	public BndProjectBuilder addClassPath(File file) {
+		this.classPath.add(file);
+
+		return this;
 	}
 
 	@Override
@@ -74,6 +82,10 @@ public class BndProjectBuilderImpl implements BndProjectBuilder {
             ProjectBuilder projectBuilder = new ProjectBuilder(project);
 
             projectBuilder.setBase(baseFile);
+
+			for (File file : classPath) {
+				projectBuilder.addClasspath(file);
+			}
 
             if (!generateManifest) {
                 projectBuilder.setProperty(ProjectBuilder.NOMANIFEST, "true");
